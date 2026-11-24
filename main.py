@@ -19,13 +19,17 @@ def main() -> int:
     assert ENTRY.strip() == ENTRY, "entry must not have leading/trailing whitespace"
     assert len(ENTRY.split()) == 1, "entry must be exactly one word"
     assert " " not in ENTRY, "entry must contain no spaces"
+    assert ENTRY.isalnum(), "entry must be a single alphanumeric token (no punctuation)"
     assert 1 <= len(ENTRY) <= 30, "entry must be 1-30 characters"
 
     out_dir = Path(os.environ.get("ENTRY_OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "entry.txt"
     out_path.write_text(ENTRY, encoding="utf-8")
+    # Verify the write: read it back and confirm it matches exactly.
+    assert out_path.read_text(encoding="utf-8") == ENTRY, "written entry does not match ENTRY"
     print(ENTRY)
+    print(f"chars: {len(ENTRY)}")
     return 0
 
 
